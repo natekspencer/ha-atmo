@@ -18,7 +18,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_PLANETWATCH, CONF_POLLING
+from .const import CONF_POLLING
 from .pyatmo import AtmoBluetoothDeviceData
 
 type AtmoConfigEntry = ConfigEntry[ActiveBluetoothProcessorCoordinator]
@@ -35,8 +35,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: AtmoConfigEntry) -> bool
     data = AtmoBluetoothDeviceData(hass)
 
     polling_enabled = entry.options.get(CONF_POLLING, False)
-    if entry.options.get(CONF_PLANETWATCH, False):
-        data.planetwatch_sensor = None
 
     def needs_poll_method(  # pylint: disable=unused-argument
         svc_info: BluetoothServiceInfoBleak, last_poll: float | None

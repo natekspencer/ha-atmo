@@ -22,8 +22,7 @@
     "step": {
       "init": {
         "data": {
-          "polling": "Enable polling (increased precision on temperature and PM sensors)",
-          "planetwatch": "Upload sensor data to PlanetWatch (active license required)"
+          "polling": "Enable polling (increased precision on temperature and PM sensors)"
         }
       }
     }
