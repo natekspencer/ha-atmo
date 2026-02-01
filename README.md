@@ -1,16 +1,16 @@
-[![Release](https://img.shields.io/github/v/release/natekspencer/hacs-atmo?style=for-the-badge)](https://github.com/natekspencer/hacs-atmo/releases)
+[![Release](https://img.shields.io/github/v/release/natekspencer/ha-atmo?style=for-the-badge)](https://github.com/natekspencer/ha-atmo/releases)
 [![Buy Me A Coffee/Beer](https://img.shields.io/badge/Buy_Me_A_☕/🍺-F16061?style=for-the-badge&logo=ko-fi&logoColor=white&labelColor=grey)](https://ko-fi.com/natekspencer)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-![Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-atmo/total?style=flat-square)
-![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-atmo/latest/total?style=flat-square)
+![Downloads](https://img.shields.io/github/downloads/natekspencer/ha-atmo/total?style=flat-square)
+![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/ha-atmo/latest/total?style=flat-square)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://brands.home-assistant.io/atmo/dark_logo.png">
   <img alt="atmo logo" src="https://brands.home-assistant.io/atmo/logo.png">
 </picture>
 
-# hacs-atmo
+# ha-atmo
 
 Home Assistant integration for Atmotube Pro devices from ATMO.
 
@@ -20,8 +20,7 @@ There are two main ways to install this custom component within your Home Assist
 
 1. Using HACS (see https://hacs.xyz/ for installation instructions if you do not already have it installed):
 
-   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=hacs-atmo&category=integration)
-
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=ha-atmo&category=integration)
    1. Use the convenient My Home Assistant link above, or, from within Home Assistant, click on the link to **HACS**
    2. Click on **Integrations**
    3. Click on the vertical ellipsis in the top right and select **Custom repositories**
