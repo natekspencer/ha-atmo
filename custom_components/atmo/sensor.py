@@ -111,18 +111,6 @@ SENSOR_DESCRIPTIONS = {
         state_class=SensorStateClass.MEASUREMENT,
         entity_registry_enabled_default=False,
     ),
-    (DeviceClass.COUNT, None): SensorEntityDescription(
-        key="planetwatch_data_collected",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        icon="mdi:database-export",
-        state_class=SensorStateClass.TOTAL_INCREASING,
-    ),
-    (DeviceClass.TIMESTAMP, None): SensorEntityDescription(
-        key="planetwatch_last_updated",
-        device_class=SensorDeviceClass.TIMESTAMP,
-        entity_category=EntityCategory.DIAGNOSTIC,
-        entity_registry_enabled_default=False,
-    ),
 }
 
 

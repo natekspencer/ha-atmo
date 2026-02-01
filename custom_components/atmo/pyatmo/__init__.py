@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import asyncio
 from datetime import date, datetime, timedelta
 from decimal import Decimal
-import json
 import logging
 from struct import unpack
 
@@ -25,7 +23,6 @@ from sensor_state_data.description import BaseSensorDescription
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.util.dt import now as dt_now
 
 from .helpers import calc_aqs, decode_info, decode_pms
 
@@ -53,8 +50,6 @@ VOLATILE_ORGANIC_COMPOUNDS__CONCENTRATION_PARTS_PER_BILLION = BaseSensorDescript
 )
 
 ATMO_MANUFACTURER_ID = 0xFFFF
-PLANETWATCH_CHECK_RATE_LIMIT = timedelta(minutes=5)
-PLANETWATCH_UPDATE_RATE_LIMIT = timedelta(seconds=20)
 
 
 class AtmoDataMixin:
@@ -79,10 +74,6 @@ class AtmoDataMixin:
     bme280_last_updated: datetime | None = None
     pm_last_updated: datetime | None = None
 
-    planetwatch_sensor: bool | None = False
-    planetwatch_checked: datetime | None = None
-    planetwatch_updated: datetime | None = None
-
 
 class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
     """Data for Atmo BLE sensors."""
@@ -95,7 +86,6 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
             self.longitude = hass.config.longitude
             self.elevation = hass.config.elevation
             self.client = async_get_clientsession(hass)
-        self.task: asyncio.Task | None = None
 
     def _start_update(self, data: BluetoothServiceInfo) -> None:
         """Update from BLE advertisement data."""
@@ -111,11 +101,7 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
         if self.get_device_name() is None:
             return
 
-        if (aqs := self._update_aqs()) is not None:
-            if self.task is None or self.task.done():
-                self.task = asyncio.create_task(
-                    self.update_planetwatch_sensor_data(address, aqs)
-                )
+        self._update_aqs()
 
     def _process_mfr_data(
         self,
@@ -396,104 +382,9 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
         except Exception as ex:  # pylint: disable=broad-except
             _LOGGER.exception(ex)
         else:
-            if (aqs := self._update_aqs()) is not None:
-                await self.update_planetwatch_sensor_data(address, aqs, True)
+            self._update_aqs()
         finally:
             if client:
                 await client.disconnect()
 
         return self._finish_update()
-
-    async def update_planetwatch_sensor_data(
-        self, address: str, aqs: int, bypass_rate_limit: bool = False
-    ) -> None:
-        """Update PlanetWatch sensor with new data."""
-        if self.planetwatch_sensor is False:
-            return
-
-        now = dt_now()
-        if (
-            not self.planetwatch_sensor
-            or self.planetwatch_checked <= now - PLANETWATCH_CHECK_RATE_LIMIT
-        ):
-            self.planetwatch_checked = now
-            url = f"https://algorandapi.planetwatch.io/api/planetwatch/checkSensor/{address}"
-            try:
-                async with self.client.get(url) as resp:
-                    resp_data: dict | None = None
-                    if resp.status == 200:
-                        resp_data = await resp.json()
-                        self.planetwatch_sensor = resp_data["sensorfound"]
-                        if self.planetwatch_sensor:
-                            self.update_predefined_sensor(
-                                SensorLibrary.COUNT__NONE,
-                                resp_data["sensor"]["data_collected"],
-                                "planetwatch_data_collected",
-                                "PlanetWatch data collected",
-                            )
-                    _LOGGER.debug(
-                        "%s: %s %s", address, resp.status, json.dumps(resp_data)
-                    )
-            except Exception as ex:  # pylint: disable=broad-except
-                _LOGGER.error(ex)
-
-        now = dt_now()
-        last_updated = self.planetwatch_updated or now - PLANETWATCH_UPDATE_RATE_LIMIT
-        if self.planetwatch_sensor and (
-            last_updated <= now - PLANETWATCH_UPDATE_RATE_LIMIT or bypass_rate_limit
-        ):
-            self.planetwatch_updated = now
-            data = {
-                "latitude": self.latitude,
-                "longitude": self.longitude,
-                "altitude": self.elevation,
-                "voc": self.voc / 1000,
-                "aqs": aqs,
-                "pm1": self.pm1,
-                "pm25": self.pm25,
-                "pm10": self.pm10,
-                "temp": self.temperature,
-                "humidity": self.humidity,
-                "pressure": self.pressure / 100,
-                "device_id": address,
-                "company_name": "ATMOTUBE",
-            }
-            _LOGGER.debug(
-                "%s: Updating PlanetWatch sensor: %s", address, json.dumps(data)
-            )
-            if None in data.values():
-                return  # not ready to update
-            url = "https://sensorsws.planetwatch.io/atmotube/v1"
-            headers = {"Content-Type": "text/plain"}
-            # headers = {
-            #     "Accept": "application/json, text/plain, */*",
-            #     "Sec-Fetch-Site": "cross-site",
-            #     "Accept-Encoding": "gzip, deflate, br",
-            #     "Accept-Language": "en-US,en;q=0.9",
-            #     "Sec-Fetch-Mode": "cors",
-            #     "Content-Type": "text/plain",
-            #     "Origin": "ionic://localhost",
-            #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
-            #     "Connection": "keep-alive",
-            #     "Sec-Fetch-Dest": "empty",
-            # }
-            try:
-                async with self.client.post(
-                    url, json=data, headers=headers, ssl=False
-                ) as resp:
-                    resp.raise_for_status()
-                    _LOGGER.debug(
-                        "%s: PlanetWatch update response: %s %s",
-                        address,
-                        resp.status,
-                        await resp.text(),
-                    )
-                    self.update_sensor(
-                        "planetwatch_last_updated",
-                        None,
-                        now,
-                        SensorDeviceClass.TIMESTAMP,
-                        "PlanetWatch last updated",
-                    )
-            except Exception as ex:  # pylint: disable=broad-except
-                _LOGGER.error(ex)

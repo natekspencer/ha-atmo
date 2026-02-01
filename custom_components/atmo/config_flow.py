@@ -18,15 +18,10 @@ from homeassistant.helpers.schema_config_entry_flow import (
     SchemaOptionsFlowHandler,
 )
 
-from .const import CONF_PLANETWATCH, CONF_POLLING, DOMAIN
+from .const import CONF_POLLING, DOMAIN
 from .pyatmo import AtmoBluetoothDeviceData as DeviceData
 
-OPTIONS_SCHEMA = vol.Schema(
-    {
-        vol.Required(CONF_POLLING, default=False): bool,
-        vol.Required(CONF_PLANETWATCH, default=False): bool,
-    }
-)
+OPTIONS_SCHEMA = vol.Schema({vol.Required(CONF_POLLING, default=False): bool})
 OPTIONS_FLOW = {"init": SchemaFlowFormStep(OPTIONS_SCHEMA)}
 
 
