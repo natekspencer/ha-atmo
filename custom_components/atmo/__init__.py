@@ -18,15 +18,17 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_PLANETWATCH, CONF_POLLING, DOMAIN
+from .const import CONF_PLANETWATCH, CONF_POLLING
 from .pyatmo import AtmoBluetoothDeviceData
+
+type AtmoConfigEntry = ConfigEntry[ActiveBluetoothProcessorCoordinator]
 
 PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: AtmoConfigEntry) -> bool:
     """Set up Atmo device from a config entry."""
     address = entry.unique_id
     assert address is not None
@@ -57,16 +59,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
         return await data.async_poll(connectable_device)
 
-    coordinator = hass.data.setdefault(DOMAIN, {})[entry.entry_id] = (
-        ActiveBluetoothProcessorCoordinator(
-            hass,
-            _LOGGER,
-            address=address,
-            mode=BluetoothScanningMode.PASSIVE,
-            update_method=data.update,
-            needs_poll_method=needs_poll_method,
-            poll_method=poll_method,
-        )
+    coordinator = entry.runtime_data = ActiveBluetoothProcessorCoordinator(
+        hass,
+        _LOGGER,
+        address=address,
+        mode=BluetoothScanningMode.PASSIVE,
+        update_method=data.update,
+        needs_poll_method=needs_poll_method,
+        poll_method=poll_method,
     )
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(
@@ -78,14 +78,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: AtmoConfigEntry) -> bool:
     """Unload a config entry."""
-    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        hass.data[DOMAIN].pop(entry.entry_id)
-
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
-async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+async def update_listener(hass: HomeAssistant, entry: AtmoConfigEntry) -> None:
     """Handle options update."""
     await hass.config_entries.async_reload(entry.entry_id)
