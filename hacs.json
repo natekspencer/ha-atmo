@@ -1,6 +1,6 @@
 {
   "name": "Atmo",
-  "homeassistant": "2025.6.0",
+  "homeassistant": "2025.3.0",
   "render_readme": true,
   "zip_release": true,
   "filename": "atmo.zip"
