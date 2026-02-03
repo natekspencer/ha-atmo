@@ -42,9 +42,9 @@ While the manual installation above seems like less steps, it's important to not
 
 [![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=atmo)
 
-Once installed, your Atmotube device should be automatically discovered; just add and confirm the device.
+Once installed, your Atmotube device should be automatically discovered; simply add and confirm it when prompted.
 
-There is also a config flow for this integration. After installing the custom component, use the My Home Assistant link above to jump directly to the integration.
+If automatic discovery doesn't work, you can manually add the integration using the My Home Assistant link above to jump directly to the setup.
 
 Alternatively:
 
