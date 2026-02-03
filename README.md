@@ -37,3 +37,54 @@ There are two main ways to install this custom component within your Home Assist
    3. Restart your Home Assistant instance and then proceed to the _Configuration_ section below.
 
 While the manual installation above seems like less steps, it's important to note that you will not be able to see updates to this custom component unless you are subscribed to the watch list. You will then have to repeat each step in the process. By using HACS, you'll be able to see that an update is available and easily update the custom component.
+
+# Configuration
+
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=atmo)
+
+Once installed, your Atmotube device should be automatically discovered and you will just need to add and confirm the device.
+
+There is also config flow for this integration. After installing the custom component, use the convenient My Home Assistant link above to take you directly to the integration.
+
+Alternatively:
+
+1. Go to **Configuration**->**Integrations**
+2. Click **+ ADD INTEGRATION** to setup a new integration
+3. Search for **Atmo** and click on it
+4. You will be guided through the rest of the setup process via the config flow
+
+# Options
+
+After this integration is set up, you can, optionally, configure the following:
+
+- **Enable polling** - increases the precision on temperature and PM sensors by polling the Atmo device instead of relying on advertisement data exclusively.
+
+# Entities
+
+| Name                             | Domain | Description                                                                                               |
+| -------------------------------- | ------ | --------------------------------------------------------------------------------------------------------- |
+| Air Quality Score                | sensor | Composite score representing overall indoor air quality derived from multiple environmental measurements. |
+| Battery                          | sensor | Current battery level of the Atmo device, reported as a percentage.                                       |
+| Battery Charging                 | sensor | Indicates whether the device battery is currently charging.                                               |
+| Humidity                         | sensor | Relative humidity of the surrounding air (%).                                                             |
+| PM1                              | sensor | Concentration of particulate matter smaller than 1.0 µm (μg/m³).                                          |
+| PM2.5                            | sensor | Concentration of particulate matter smaller than 2.5 µm (μg/m³), commonly associated with health impacts. |
+| PM10                             | sensor | Concentration of particulate matter smaller than 10 µm (μg/m³).                                           |
+| Pressure                         | sensor | Ambient air pressure measured by the device.                                                              |
+| Temperature                      | sensor | Ambient temperature measured by the device.                                                               |
+| Volatile Organic Compounds (VOC) | sensor | Estimated concentration of volatile organic compounds in the air (ppb).                                   |
+
+---
+
+## Support Me
+
+I'm not employed by Atmo, and provide this custom component purely for your own enjoyment and home automation needs.
+
+If you run into any issues, feel free to open an issue on GitHub, and I’ll do my best to assist!
+
+If you found this integration useful and want to donate, consider [sponsoring me on GitHub][github-sponsor] or buying me a coffee ☕ (or beer 🍺) by using the link below:
+
+[![Support me on ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)][ko-fi]
+
+[github-sponsor]: https://github.com/sponsors/natekspencer
+[ko-fi]: https://ko-fi.com/natekspencer
