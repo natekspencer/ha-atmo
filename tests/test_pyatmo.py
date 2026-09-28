@@ -18,7 +18,7 @@ from custom_components.atmo.pyatmo.helpers import (
 
 def test_aqs() -> None:
     """Test AQS."""
-    for voc in range(0, 100001):
+    for voc in range(100001):
         voc /= 1000
         aqs = aqs_from_voc(voc)
         assert aqs is not None
