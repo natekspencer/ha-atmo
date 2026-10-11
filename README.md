@@ -11,8 +11,8 @@
 <!-- END AUTO-GENERATED HEADER -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://brands.home-assistant.io/atmo/dark_logo.png">
-  <img alt="atmo logo" src="https://brands.home-assistant.io/atmo/logo.png">
+  <source media="(prefers-color-scheme: dark)" srcset="custom_components/atmo/brand/dark_logo.png">
+  <img alt="atmo logo" src="custom_components/atmo/brand/logo.png">
 </picture>
 
 # Atmo for Home Assistant
