@@ -379,8 +379,8 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
                 callback(data, address)
 
             await client.disconnect()
-        except Exception as ex:  # pylint: disable=broad-except
-            _LOGGER.exception(ex)
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.exception("%s: Error polling for additional data", address)
         else:
             self._update_aqs()
         finally:

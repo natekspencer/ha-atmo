@@ -2,20 +2,20 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 
 PM1_LEVELS = [14, 34, 61, 95, 100]
 PM25_LEVELS = [20, 50, 90, 140, 170]
 PM10_LEVELS = [30, 75, 125, 200, 250]
 
 
-def decode_info(info_byte: int) -> map[bool]:
+def decode_info(info_byte: int) -> Iterator[bool]:
     """Decode an info byte.
 
     Returns, in order: `pm_on`, `error`, `bonded`, `charging`, `timer`, `_`, `voc_ready`.
     `_` denotes a reserved/future value and can be discarded/ignored.
     """
-    return map(lambda i: bool(info_byte >> i & 0x01), range(7))
+    return (bool(info_byte >> i & 0x01) for i in range(7))
 
 
 def decode_pm(data: bytes) -> float | None:
@@ -30,7 +30,7 @@ def decode_pms(data: bytes, count: int, size: int) -> Iterable[float | None]:
     """Decode multiple PM data."""
     if len(data) < count * size:
         return (None,) * count
-    return map(lambda i: decode_pm(data[i * size : i * size + size]), range(count))
+    return (decode_pm(data[i * size : i * size + size]) for i in range(count))
 
 
 def aqs_from_voc(voc: float) -> int:
