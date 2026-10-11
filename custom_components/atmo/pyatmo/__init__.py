@@ -346,7 +346,7 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
     def update_predefined_sensor(
         self,
         base_description: BaseSensorDescription,
-        native_value: None | str | int | float | date | datetime | Decimal,
+        native_value: None | str | float | date | datetime | Decimal,
         key: str | None = None,
         name: str | None = None,
         device_id: str | None = None,
@@ -379,8 +379,8 @@ class AtmoBluetoothDeviceData(BluetoothData, AtmoDataMixin):
                 callback(data, address)
 
             await client.disconnect()
-        except Exception as ex:  # pylint: disable=broad-except
-            _LOGGER.exception(ex)
+        except Exception:  # pylint: disable=broad-except
+            _LOGGER.exception("%s: Error polling for additional data", address)
         else:
             self._update_aqs()
         finally:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from struct import unpack
 
 from custom_components.atmo.pyatmo.helpers import (
@@ -18,7 +18,7 @@ from custom_components.atmo.pyatmo.helpers import (
 
 def test_aqs() -> None:
     """Test AQS."""
-    for voc in range(0, 100001):
+    for voc in range(100001):
         voc /= 1000
         aqs = aqs_from_voc(voc)
         assert aqs is not None
@@ -90,7 +90,7 @@ def test_data() -> None:
 
 def test_time() -> None:
     """Time tests."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     limiter = timedelta(seconds=30)
     last_updated = None or now - limiter
     assert last_updated == now - limiter

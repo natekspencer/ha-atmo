@@ -7,7 +7,9 @@ bleak-retry-connector
 bluetooth-sensor-state-data
 
 # Development
-colorlog>=6.7.0
-pip>=21.0
-pre-commit>=4.5
-ruff>=0.14
+colorlog>=6.12.0
+isal
+pip>=26.2.1
+pre-commit>=4.6.2
+ruff>=0.17.0
+zlib-ng
