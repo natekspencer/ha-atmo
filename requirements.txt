@@ -1,15 +1,15 @@
 # Home Assistant
-homeassistant>=2025.3
+homeassistant>=2025.11
 
 # Integration
-bleak
-bleak-retry-connector
 bluetooth-sensor-state-data
 
 # Development
+--requirement requirements_test.txt
 colorlog>=6.12.0
 isal
 pip>=26.2.1
 pre-commit>=4.6.2
+pytest-homeassistant
 ruff>=0.17.0
 zlib-ng
