@@ -5,7 +5,7 @@ homeassistant>=2026.7
 bluetooth-sensor-state-data
 
 # Development
---requirement requirements_test.txt
+-r requirements_test.txt
 colorlog>=6.12.0
 isal
 pip>=26.2.1
